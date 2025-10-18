@@ -1,105 +1,120 @@
-<!DOCTYPE html> <!-- Deklaracja HTML5 -->
-<html lang="pl"> <!-- Początek dokumentu, język: polski -->
+<!DOCTYPE html>
+<html lang="pl">
 <head>
-  <meta charset="UTF-8"> <!-- Kodowanie znaków, by działały polskie litery -->
-  <title>Proste TODO</title> <!-- Tytuł strony -->
+  <meta charset="UTF-8">
+  <title>TODO z datą i terminem</title>
 
   <!-- === STYLE (CSS) === -->
   <style>
-    /* Ustawienia ogólne strony */
     body {
-      font-family: "Segoe UI", Arial, sans-serif; 
-      background: linear-gradient(135deg, #74ABE2, #5563DE); 
-      margin: 0; 
-      padding: 40px; 
-      display: flex; 
-      justify-content: center; 
-      align-items: flex-start; 
-      min-height: 100vh;  
-      color: #333;  
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      color: #333;
     }
 
-    /* Główne okno aplikacji */
     .container {
-      background: #fff; 
-      padding: 30px; 
-      border-radius: 15px; 
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       width: 100%;
-      max-width: 400px;  
-      text-align: center; 
-      animation: fadeIn 0.6s ease;  
+      max-width: 500px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
     }
 
     h1 {
-      margin-bottom: 20px;  
+      margin-bottom: 15px;
       color: #334;
     }
 
-    /* Pole do wpisania zadania */
-    input {
-      padding: 10px;  
-      width: 70%;  
-      border: 1px solid #ccc; 
-      border-radius: 8px; 
-      outline: none;
-      transition: border-color 0.3s;
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
     }
 
-    /* Efekt po kliknięciu w pole */
+    input, button, select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    input[type="text"] {
+      width: 80%;
+    }
+
+    input[type="date"] {
+      width: 50%;
+    }
+
     input:focus {
       border-color: #5563DE;
     }
 
-    /* Główny przycisk */
     button {
-      padding: 10px 15px;
       background: #5563DE;
-      color: white;  
-      border: none;  
-      border-radius: 8px; 
-      cursor: pointer; 
-      margin-left: 5px;
-      transition: background 0.3s; 
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
-    /* Zmiana koloru po najechaniu */
     button:hover {
       background: #3843b5;
     }
 
-    /* Lista zadań */
+    select {
+      background: #f4f4f4;
+      margin-top: 10px;
+    }
+
     ul {
       list-style: none;
       padding: 0;
       margin-top: 20px;
-      text-align: left; 
+      text-align: left;
     }
 
-    /* Pojedyncze zadanie */
     li {
-      background: #f4f6ff; 
+      background: #f4f6ff;
       padding: 10px 15px;
       margin: 8px 0;
       border-radius: 8px;
-      cursor: pointer;
-      display: flex; 
+      display: flex;
       justify-content: space-between;
-      align-items: center; 
-      transition: background 0.3s, transform 0.2s; 
+      align-items: center;
+      transition: background 0.3s, transform 0.2s;
     }
 
-    /* Efekt hover na zadaniu */
     li:hover {
       background: #e0e4ff;
-      transform: translateY(-2px); 
+      transform: translateY(-2px);
     }
 
-    li span {
-      flex: 1; 
+    .info {
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Przycisk "Usuń" */
+    .time {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .due {
+      font-size: 13px;
+      color: #cc3333;
+    }
+
     li button {
       background: #ff5c5c;
       padding: 5px 10px;
@@ -110,7 +125,6 @@
       background: #d94b4b;
     }
 
-    /* Efekt pojawienia się okienka */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -119,39 +133,121 @@
 </head>
 
 <body>
-  <!-- === ZAWARTOŚĆ STRONY (HTML) === -->
+  <!-- === HTML === -->
   <div class="container">
-    <h1>📝 Lista zadań</h1> 
+    <h1>📝 Lista zadań</h1>
 
-    <div>
-      <input id="taskInput" placeholder="Nowe zadanie...">
-      <button onclick="addTask()">Dodaj</button> 
+    <!-- Pola do wpisania zadania i daty -->
+    <div class="inputs">
+      <input id="taskInput" type="text" placeholder="Nowe zadanie...">
+      <input id="dueDate" type="date">
+      <button onclick="addTask()">Dodaj zadanie</button>
     </div>
 
+    <!-- Wybór sortowania -->
+    <div>
+      <select id="sortSelect" onchange="sortTasks()">
+        <option value="newest">Sortuj: Najnowsze</option>
+        <option value="oldest">Sortuj: Najstarsze</option>
+        <option value="az">Sortuj: A–Z</option>
+        <option value="za">Sortuj: Z–A</option>
+      </select>
+    </div>
+
+    <!-- Lista zadań -->
     <ul id="taskList"></ul>
   </div>
 
   <!-- === SKRYPT (JavaScript) === -->
   <script>
-    /* Funkcja dodająca nowe zadanie do listy */
+    let tasks = []; // Tablica z zadaniami
+
+    // Dodawanie nowego zadania
     function addTask() {
       const input = document.getElementById('taskInput');
+      const dueInput = document.getElementById('dueDate');
       const text = input.value.trim();
-      if (text === '') return;
+      const due = dueInput.value;
 
-      const li = document.createElement('li');
-      const span = document.createElement('span'); 
-      span.textContent = text; 
+      if (text === '') return; // Puste — nie dodawaj
 
-      const del = document.createElement('button'); 
-      del.textContent = 'Usuń'; 
-      del.onclick = () => li.remove(); 
+      // Data dodania
+      const now = new Date();
+      const date = now.toLocaleDateString();
+      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      li.appendChild(span); 
-      li.appendChild(del); 
-      document.getElementById('taskList').appendChild(li); 
+      // Obiekt zadania
+      const task = {
+        text: text,
+        date: date,
+        time: time,
+        due: due || 'brak terminu',
+        createdAt: now.getTime()
+      };
 
-      input.value = ''; 
+      tasks.push(task);
+      input.value = '';
+      dueInput.value = '';
+
+      renderTasks(); // Odśwież listę
+    }
+
+    // Wyświetlanie listy zadań
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+
+      for (const task of tasks) {
+        const li = document.createElement('li');
+
+        // Lewa strona zadania
+        const info = document.createElement('div');
+        info.className = 'info';
+
+        const span = document.createElement('span');
+        span.textContent = task.text;
+
+        const small = document.createElement('div');
+        small.className = 'time';
+        small.textContent = `${task.date} • ${task.time}`;
+
+        const due = document.createElement('div');
+        due.className = 'due';
+        due.textContent = `Termin: ${task.due}`;
+
+        info.appendChild(span);
+        info.appendChild(small);
+        info.appendChild(due);
+
+        // Prawa strona — przycisk usuń
+        const del = document.createElement('button');
+        del.textContent = 'Usuń';
+        del.onclick = () => {
+          tasks = tasks.filter(t => t !== task);
+          renderTasks();
+        };
+
+        li.appendChild(info);
+        li.appendChild(del);
+        list.appendChild(li);
+      }
+    }
+
+    // Sortowanie zadań
+    function sortTasks() {
+      const mode = document.getElementById('sortSelect').value;
+
+      if (mode === 'az') {
+        tasks.sort((a, b) => a.text.localeCompare(b.text));
+      } else if (mode === 'za') {
+        tasks.sort((a, b) => b.text.localeCompare(a.text));
+      } else if (mode === 'newest') {
+        tasks.sort((a, b) => b.createdAt - a.createdAt);
+      } else if (mode === 'oldest') {
+        tasks.sort((a, b) => a.createdAt - b.createdAt);
+      }
+
+      renderTasks();
     }
   </script>
 </body>
