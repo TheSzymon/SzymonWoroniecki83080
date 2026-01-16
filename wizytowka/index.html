@@ -107,6 +107,34 @@
         box-shadow: 0 12px 20px rgba(79, 70, 229, 0.25);
       }
 
+      /* ===== PORTFOLIO ===== */
+      .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .portfolio-link {
+        display: block;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        text-align: center;
+        font-weight: 600;
+        color: #3730a3;
+        border: 2px solid #c7d2fe;
+        transition: transform 0.3s ease, box-shadow 0.3s ease,
+          border-color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .portfolio-link:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 20px rgba(79, 70, 229, 0.25);
+        border-color: #6366f1;
+      }
+
       /* ===== FORM ===== */
       form {
         display: grid;
@@ -221,6 +249,36 @@
           <div class="skill-card">SQL &amp; NoSQL</div>
           <div class="skill-card">Git &amp; Docker</div>
           <div class="skill-card">Security Basics</div>
+        </div>
+      </section>
+
+      <section class="portfolio" aria-labelledby="portfolio-title">
+        <h2 id="portfolio-title">Moje projekty</h2>
+        <div class="portfolio-grid">
+          <a
+            href="#"
+            class="portfolio-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Projekt 1"
+            >Projekt 1</a
+          >
+          <a
+            href="#"
+            class="portfolio-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Projekt 2"
+            >Projekt 2</a
+          >
+          <a
+            href="#"
+            class="portfolio-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Projekt 3"
+            >Projekt 3</a
+          >
         </div>
       </section>
 
